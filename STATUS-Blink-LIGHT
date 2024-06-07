@@ -1,0 +1,16 @@
+#!/bin/bash
+
+while true; do
+    clear
+    systemctl list-units --type=service --no-legend --plain --all | \
+    awk '$1 == "●" {print $2}' | \
+    while read -r SERVICE; do
+        STATUS=$(systemctl is-active $SERVICE)
+        if [ "$STATUS" = "active" ]; then
+            echo -e "$SERVICE: \e[32m●\e[0m"  # Blinking green light
+        else
+            echo -e "$SERVICE: \e[31m●\e[0m"  # Blinking red light
+        fi
+    done
+    sleep 1
+done
